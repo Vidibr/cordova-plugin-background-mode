@@ -23,9 +23,6 @@ var exec    = require('cordova/exec'),
     channel = require('cordova/channel');
 
 
-// Override back button action to prevent being killed
-document.addEventListener('backbutton', function () {}, false);
-
 // Called before 'deviceready' listener will be called
 channel.onCordovaReady.subscribe(function () {
     // Device plugin is ready now
@@ -33,11 +30,6 @@ channel.onCordovaReady.subscribe(function () {
         // Set the defaults
         exports.setDefaults({});
     });
-
-    // Only enable WP8 by default
-    if (['WinCE', 'Win32NT'].indexOf(device.platform) > -1) {
-        exports.enable();
-    }
 });
 
 
@@ -63,9 +55,11 @@ exports._isActive = false;
 exports._defaults = {
     title:  'App is running in background',
     text:   'Doing heavy tasks.',
-    ticker: 'App is running in background',
+    ticker: 'Running in background',
     resume: true,
-    silent: false
+    silent: false,
+    color:  undefined,
+    icon:   'icon'
 };
 
 
@@ -112,7 +106,7 @@ exports.setDefaults = function (overrides) {
         }
     }
 
-    if (device.platform == 'Android') {
+    if ((device.platform == 'Android') || (device.platform == 'Windows')){
         cordova.exec(null, null, 'BackgroundMode', 'configure', [defaults, false]);
     }
 };
@@ -127,7 +121,7 @@ exports.setDefaults = function (overrides) {
 exports.configure = function (options) {
     var settings = this.mergeWithDefaults(options);
 
-    if (device.platform == 'Android') {
+    if ((device.platform == 'Android') || (device.platform == 'Windows')){
         cordova.exec(null, null, 'BackgroundMode', 'configure', [settings, true]);
     }
 };

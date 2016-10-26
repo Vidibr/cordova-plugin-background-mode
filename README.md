@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/cordova-plugin-background-mode.svg)](http://badge.fury.io/js/cordova-plugin-background-mode)
 
 <p align="right">
     <a href="https://github.com/katzer/cordova-plugin-background-mode/tree/example">EXAMPLE :point_right:</a>
@@ -17,6 +18,8 @@ This cordova plug-in can be used for applications, who rely on continuous networ
 ### :bangbang: Store Compliance :bangbang:
 The plugin focuses on enterprise-only distribution and may not compliant with all public store vendors.
 
+__Update:__ The plugin ID has changed to cordova-plugin-background-mode and is available under npm. An updated version comes later!
+
 
 ## Overview
 1. [Supported Platforms](#supported-platforms)
@@ -31,6 +34,7 @@ The plugin focuses on enterprise-only distribution and may not compliant with al
 - __iOS__ (_including iOS8_)
 - __Android__ _(SDK >=11)_
 - __WP8__
+- __Windows 10__
 
 
 ## Installation
@@ -110,7 +114,7 @@ document.addEventListener('deviceready', function () {
 ```
 
 ### Prevent the app from going to sleep in background
-To prevent the app from being paused while in background, the `backroundMode.enable` interface has to be called.
+To prevent the app from being paused while in background, the `backgroundMode.enable` interface has to be called.
 
 #### Further informations
 - The background mode will be activated once the app has entered the background and will be deactivated after the app has entered the foreground.
@@ -137,21 +141,21 @@ The `backgroundMode.isEnabled` interface can be used to get the information if t
 cordova.plugins.backgroundMode.isEnabled(); // => boolean
 ```
 
-### Receive if the background mode is active
+### Receive if the background mode is active (Android/iOS only)
 The `backgroundMode.isActive` interface can be used to get the information if the background mode is active.
 
 ```javascript
 cordova.plugins.backgroundMode.isActive(); // => boolean
 ```
 
-### Get informed when the background mode has been activated
+### Get informed when the background mode has been activated (Android/iOS only)
 The `backgroundMode.onactivate` interface can be used to get notified when the background mode has been activated.
 
 ```javascript
 cordova.plugins.backgroundMode.onactivate = function() {};
 ```
 
-### Get informed when the background mode has been deactivated
+### Get informed when the background mode has been deactivated (Android/iOS only)
 The `backgroundMode.ondeactivate` interface can be used to get notified when the background mode has been deactivated.
 
 #### Further informations
@@ -162,7 +166,7 @@ cordova.plugins.backgroundMode.ondeactivate = function() {};
 ```
 
 ### Get informed when the background mode could not been activated
-The `backgroundMode.onfailure` interface can be used to get notified when the background mode could not been activated.
+The `backgroundMode.onfailure` interface can be used to get notified when the background mode could not be activated (Android/iOS) or enabled (Windows 10).
 
 The listener has to be a function and takes the following arguments:
  - errorCode: Error code which describes the error
@@ -201,21 +205,19 @@ document.addEventListener('deviceready', function () {
 To indicate that the app is executing tasks in background and being paused would disrupt the user, the plug-in has to create a notification while in background - like a download progress bar.
 
 #### Override defaults
-The title, ticker and text for that notification can be customized as follows:
+The title, ticker, text and icon for that notification can be customized as below. Also, by default the app will come to foreground when tapping on the notification. That can be changed by setting resume to false. On Android 5.0+, the color option will set the background color of the notification circle. Also on Android 5.0+, setting isPublic to true will make the full notification show on a secure lockscreen.
+
+All of these fields are optional - only override the things you need to.
 
 ```javascript
 cordova.plugins.backgroundMode.setDefaults({
     title:  String,
     ticker: String,
-    text:   String
-})
-```
-
-By default the app will come to foreground when taping on the notification. That can be changed also.
-
-```javascript
-cordova.plugins.backgroundMode.setDefaults({
-    resume: false
+    text:   String,
+    icon: "icon" // this will look for icon.png in platforms/android/res/drawable
+    resume: true / false,
+    color: "#123456",
+    isPublic: true / false,
 })
 ```
 

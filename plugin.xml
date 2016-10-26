@@ -2,14 +2,11 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova.plugin.background-mode"
-        version="0.6.5">
-
+        id="cordova-plugin-background-mode"
+        version="0.6.6-dev">
     <name>BackgroundMode</name>
 
-    <description>
-        Cordova plugin to prevent the app from going to sleep in background.
-    </description>
+    <description>Prevent apps from going to sleep in background.</description>
 
     <repo>https://github.com/katzer/cordova-plugin-background-mode.git</repo>
 
@@ -20,11 +17,12 @@
     <author>Sebastián Katzer</author>
 
     <!-- dependencies -->
-    <dependency id="org.apache.cordova.device" />
+    <dependency id="cordova-plugin-device" />
 
     <!-- cordova -->
     <engines>
         <engine name="cordova" version=">=3.0.0" />
+        <engine name="android-sdk" version=">=16" />
     </engines>
 
     <!-- js -->
@@ -73,7 +71,10 @@
              * candidate for killing when low on memory.
             -->
             <service android:name="de.appplant.cordova.plugin.background.ForegroundService" />
+        </config-file>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
         </config-file>
 
         <source-file
@@ -107,4 +108,19 @@
 
         <source-file src="src/wp8/BackgroundMode.cs" />
     </platform>
+
+
+	<!-- windows -->
+	<platform name="windows">
+		<config-file target="config.xml" parent="/*">
+			<feature name="BackgroundMode" >
+				<param name="windows-package" value="BackgroundMode"/>
+			</feature>
+		</config-file>
+
+		<js-module src="src/windows/backgroundmodeProxy.js" name="backgroundmodeProxy">
+			<merges target="" />
+		</js-module>
+	</platform>
+
 </plugin>
